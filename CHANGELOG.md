@@ -14,7 +14,7 @@ don't change the contract are **patch**. `DEFAULT_*` constants are part of the
 contract: changing a default value is at least a minor (potentially major if it
 alters behavior consumers rely on).
 
-## [Unreleased]
+## [0.0.1] - 2026-05-31
 
 ### Read-path robustness (TASK-010) — additive (semver-minor)
 
