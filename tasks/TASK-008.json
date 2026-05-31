@@ -8,7 +8,7 @@
     "An example app in the repo installs the package and renders both authoring and preview against a real or stubbed dataset.",
     "Docs state the write-token/permission requirement and link the secure write-path options from TASK-005."
   ],
-  "status": "todo",
+  "status": "done",
   "priority": "medium",
   "labels": ["docs", "integration", "example"],
   "assignee": null,
@@ -22,7 +22,16 @@
       "body": "Reshaped from generic seed. CORS step is the most-forgotten prod blocker per the guide."
     }
   ],
+  "closure": {
+    "at": "2026-05-30T23:55:00.000Z",
+    "by": "orchestrator",
+    "summary": "README rewritten into full integration guide (install-from-GitHub, deps, read path, CORS Origins, BlogAuthor props/events, secure write path + token-scope rules, secure AI hook, TASK-011 publish semantics, image upload, schema link, running dev/ + studio/ example). New docs/SCHEMA.md (field-by-field post/author/blockContent, points to studio/schemaTypes/). examples/consumer.ts now a reference mounting BlogAuthor + BlogPostPreview with stubbed adapter/generate. 107/107 tests, build+lint green. Independent reviewer PASS, no HIGH; two non-blocking nits deferred (treparole vs treparole-website naming drift; strike vs strike-through label mirroring a source constant wart in portableComponents.ts DELEGATED_DECORATOR_MARKS).",
+    "deferred_nits": [
+      "Source wart (not docs): DELEGATED_DECORATOR_MARKS uses 'strike' while studio blockContent decorator value is 'strike-through'. Consider aligning in a future cleanup (out of TASK-008 scope).",
+      "Naming: standardize 'treparole' vs 'treparole-website' references."
+    ]
+  },
   "created_at": "2026-05-29T17:57:48.588Z",
-  "updated_at": "2026-05-29T18:05:00.000Z",
+  "updated_at": "2026-05-30T23:55:00.000Z",
   "jira_key": null
 }

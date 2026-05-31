@@ -10,8 +10,18 @@ export {
   DEFAULT_API_VERSION,
   type BlogSanityConfig,
 } from './sanity/client'
-export { getPostList, getPostBySlug } from './sanity/posts'
-export { POST_LIST_QUERY, POST_BY_SLUG_QUERY } from './sanity/queries'
+export { getPostList, getPostBySlug, type GetPostBySlugOptions } from './sanity/posts'
+export {
+  POST_LIST_QUERY,
+  POST_BY_SLUG_QUERY,
+  POST_BY_SLUG_PREVIEW_QUERY,
+} from './sanity/queries'
+// TASK-010: normalized, consumer-facing read error (raw SDK errors are wrapped).
+export {
+  BlogReadError,
+  isBlogReadError,
+  type BlogReadOperation,
+} from './sanity/read-error'
 
 // Public content-model types.
 export type {

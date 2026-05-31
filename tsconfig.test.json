@@ -1,0 +1,18 @@
+{
+  // Type-check config for the SPEC files. The build config (tsconfig.build.json)
+  // excludes tests/, so `npm run typecheck` never checks the spec files — vitest
+  // only esbuild-transpiles them (stripping types without checking). This config
+  // closes that gap: it includes BOTH src/ and tests/ so type regressions in the
+  // public contract exercised by tests are caught (run via `typecheck:test`).
+  //
+  // It extends the base tsconfig.json, which already declares the test-time
+  // globals ("vitest/globals" + "node") and includes tests/**. We restate the
+  // include here explicitly for clarity and to keep it independent of the base
+  // include drifting.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

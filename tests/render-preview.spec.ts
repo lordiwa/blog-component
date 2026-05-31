@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { h } from 'vue'
+import { h, type VNode } from 'vue'
 import { createImageUrlBuilder } from '@sanity/image-url'
 import BlogPostPreview from '../src/render/BlogPostPreview.vue'
 import {
@@ -155,7 +155,7 @@ describe('BlogPostPreview', () => {
     const RouterLinkStub = {
       name: 'RouterLink',
       props: ['to'],
-      setup(p: { to: string }, { slots }: { slots: Record<string, () => unknown> }) {
+      setup(p: { to: string }, { slots }: { slots: { default?: () => VNode[] } }) {
         return () => h('a', { 'data-router-to': p.to, class: 'router-link' }, slots.default?.())
       },
     }
@@ -204,6 +204,17 @@ describe('missing-renderer guard (no silent failures)', () => {
   })
 })
 
+describe('null-tolerant / empty body (TASK-010 AC3)', () => {
+  it('renders an empty [] body without crashing (renders the container, no content)', () => {
+    const wrapper = mountPreview([])
+    const container = wrapper.find('[data-testid="blog-post-preview"]')
+    expect(container.exists()).toBe(true)
+    // No block content rendered for an empty body.
+    expect(container.text()).toBe('')
+    expect(wrapper.find('[data-testid="missing-renderer"]').exists()).toBe(false)
+  })
+})
+
 describe('renderer coverage checklist (acceptance criterion #4)', () => {
   const components = createPortableComponents({ imageUrlBuilder: builder })
 
@@ -214,8 +225,11 @@ describe('renderer coverage checklist (acceptance criterion #4)', () => {
   })
 
   it('has a renderer for every custom block style', () => {
+    // `components.block` is typed as a single component OR a style-keyed record;
+    // here it is the record form, so narrow it for indexing by style.
+    const blockMap = components.block as Record<string, unknown> | undefined
     for (const style of CUSTOM_BLOCK_STYLES) {
-      expect(components.block?.[style], `missing renderer for block style "${style}"`).toBeTruthy()
+      expect(blockMap?.[style], `missing renderer for block style "${style}"`).toBeTruthy()
     }
   })
 

@@ -46,19 +46,19 @@
     {
       "key": "TASK-008",
       "title": "Consumer integration guide + example app",
-      "status": "todo",
+      "status": "done",
       "priority": "medium"
     },
     {
       "key": "TASK-009",
       "title": "Build, type-export, and publish pipeline + test harness",
-      "status": "todo",
+      "status": "done",
       "priority": "medium"
     },
     {
       "key": "TASK-010",
       "title": "Read-path robustness follow-ups (errors, scheduling filter, null-tolerance)",
-      "status": "todo",
+      "status": "done",
       "priority": "medium"
     },
     {

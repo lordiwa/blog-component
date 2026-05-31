@@ -8,7 +8,7 @@
     "CI runs unit tests for the read query, renderer, AI generation (mocked), and save round-trip (mocked).",
     "Public exports are reviewed against the semver-major rule and recorded in a changelog."
   ],
-  "status": "todo",
+  "status": "done",
   "priority": "medium",
   "labels": ["packaging", "ci", "testing", "release"],
   "assignee": null,
@@ -32,7 +32,15 @@
       "body": "CONFIRMED REAL (TASK-007 review): typechecking with the full tsconfig.json (which includes tests/) surfaces pre-existing TYPE ERRORS in tests/ai-generate.spec.ts, tests/render-preview.spec.ts, and tests/write-adapter.spec.ts — currently hidden because vitest's esbuild strips types without checking. When this ticket adds the tests/ typecheck pass, those spec type errors must be fixed as part of it. (blog-author.spec.ts is type-clean.)"
     }
   ],
+  "closure": {
+    "at": "2026-05-31T00:05:00.000Z",
+    "by": "orchestrator",
+    "summary": "Packaging/CI/harness done. Added tsconfig.test.json + `typecheck:test` (vue-tsc over src/ + tests/) closing the tests-typecheck gap; fixed 8 pre-existing spec type errors (type-only, no assertions weakened/skipped — reviewer-verified). .github/workflows/ci.yml runs lint -> typecheck -> typecheck:test -> npm test -> build on push/PR (Node 20, npm ci). CHANGELOG.md records the full public API vs src/index.ts + semver-major policy. Build emits ESM + index.d.ts + css with clean rolled-up declarations. .gitignore completed; RELEASING.md gives step-by-step git init/gh repo create/tag/install guide (user runs it). All 5 CI gates green locally (lint 0, typecheck 0, typecheck:test 0, 107 tests, build ok). Independent reviewer PASS, no HIGH/MEDIUM; 3 LOW nits — 2 applied (README render-types row completed; CI uses npm test), 1 left (harmless redundant typecheck inside build step).",
+    "manual_followups": [
+      "AC1 fresh-project type resolution + AC2 tagged-release install are post-publish steps the USER runs per RELEASING.md (git init -> gh repo create -> tag vX.Y.Z -> install github:<user>/blog-component#vX.Y.Z, then tsc --noEmit in a throwaway project)."
+    ]
+  },
   "created_at": "2026-05-29T17:57:48.633Z",
-  "updated_at": "2026-05-29T18:05:00.000Z",
+  "updated_at": "2026-05-31T00:05:00.000Z",
   "jira_key": null
 }

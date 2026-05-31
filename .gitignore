@@ -1,11 +1,27 @@
+# Dependencies
 node_modules/
+studio/node_modules/
+
+# Build output. `dist/` is intentionally NOT committed: the package's `prepare`
+# script (`npm run build`) builds it on install, so consumers installing from a
+# GitHub ref get a freshly built bundle. This matches the README "dist not
+# committed" note. (The `studio/` app builds its own output too.)
 dist/
-*.log
-.DS_Store
-coverage/
+studio/dist/
+studio/.sanity/
 
 # Local dev playground secrets (TASK-008). Never commit real tokens/keys.
 # `.env.example` is the committed template; `.env` holds the real values.
 .env
 .env.*
 !.env.example
+
+# Test / tooling output
+coverage/
+
+# Editor / OS noise
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

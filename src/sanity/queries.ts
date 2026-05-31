@@ -26,12 +26,13 @@ export const POST_LIST_QUERY = `*[_type == "post" && defined(publishedAt) && pub
     "bodyCharCount": coalesce(length(pt::text(body)), 0)
   }`
 
-/**
- * DETAIL query — full post by slug. Expands the author and resolves
- * `internalLink` markDefs to the referenced post's current slug, per the
- * guide's section 5 gotcha. Takes a `$slug` parameter.
- */
-export const POST_BY_SLUG_QUERY = `*[_type == "post" && slug.current == $slug][0]{
+// Shared DETAIL projection (TASK-010). Used by both the airtight and preview
+// by-slug queries so they never drift. Notes:
+//  - AC3 null-tolerant body: `coalesce(body[]{ ... }, [])` so an absent body
+//    yields `[]` (never null) — `Post.body` stays a non-null `BlockContent`.
+//  - section 5 internalLink gotcha: expand the stored reference to the target
+//    post's current slug at read time.
+const DETAIL_PROJECTION = `{
     _id,
     title,
     slug,
@@ -41,7 +42,7 @@ export const POST_BY_SLUG_QUERY = `*[_type == "post" && slug.current == $slug][0
     mainImage,
     featured,
     "author": author->{name, image},
-    body[]{
+    "body": coalesce(body[]{
       ...,
       markDefs[]{
         ...,
@@ -49,5 +50,25 @@ export const POST_BY_SLUG_QUERY = `*[_type == "post" && slug.current == $slug][0
           "slug": @.reference->slug.current
         }
       }
-    }
+    }, [])
   }`
+
+/**
+ * DETAIL query — full post by slug, AIRTIGHT (default). Mirrors the LIST query's
+ * publish filter (`defined(publishedAt) && publishedAt <= now()`) so a
+ * future-dated/scheduled post is NOT reachable by slug by default. Expands the
+ * author, coalesces an absent body to `[]`, and resolves `internalLink` markDefs
+ * to slugs. Takes a `$slug` parameter.
+ *
+ * For the preview/draft escape hatch that DOES reach scheduled posts, see
+ * {@link POST_BY_SLUG_PREVIEW_QUERY}.
+ */
+export const POST_BY_SLUG_QUERY = `*[_type == "post" && slug.current == $slug && defined(publishedAt) && publishedAt <= now()][0]${DETAIL_PROJECTION}`
+
+/**
+ * DETAIL query — full post by slug, PREVIEW variant. Identical projection to
+ * {@link POST_BY_SLUG_QUERY} but WITHOUT the publish filter, so a direct slug
+ * lookup reaches scheduled/future-dated posts. Use only for trusted preview
+ * surfaces (e.g. an editor previewing an unpublished draft). Takes `$slug`.
+ */
+export const POST_BY_SLUG_PREVIEW_QUERY = `*[_type == "post" && slug.current == $slug][0]${DETAIL_PROJECTION}`

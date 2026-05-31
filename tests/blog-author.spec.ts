@@ -61,7 +61,10 @@ const generatedPost: GeneratedPost = {
 }
 
 function makeGenerate(post: GeneratedPost = generatedPost) {
-  return vi.fn(async () => structuredClone(post))
+  // Type the mock with the real `generate` signature so `mock.calls[i][0]`
+  // (the brief) is typed as `string` rather than the empty tuple `[]`.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return vi.fn(async (_brief: string) => structuredClone(post))
 }
 
 function imageFile(name = 'photo.jpg', type = 'image/jpeg', bytes = 1024): File {

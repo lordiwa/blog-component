@@ -25,7 +25,10 @@ function makeWriteClient(opts?: {
   const create = vi.fn().mockResolvedValue({ _id: createId, _rev: 'r1' })
 
   const commit = vi.fn().mockResolvedValue({ _id: patchId, _rev: 'r2' })
-  const set = vi.fn(() => ({ commit }))
+  // Type `set`'s parameter so `set.mock.calls[i][0]` (the patched fields) is a
+  // record rather than the empty tuple `[]`. The adapter calls `.set(fields)`.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const set = vi.fn((_fields: Record<string, unknown>) => ({ commit }))
   const patch = vi.fn(() => ({ set }))
 
   const upload = vi.fn().mockResolvedValue({

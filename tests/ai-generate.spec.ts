@@ -188,9 +188,10 @@ describe('generatePostBody', () => {
   })
 
   it('throws a clear error when neither client nor apiKey is supplied', async () => {
-    // @ts-expect-error intentionally missing credentials
+    // `{}` is a valid GeneratePostOptions at the type level (all fields are
+    // optional); the rejection is a RUNTIME guard, so no directive is needed.
     await expect(generatePostBody('brief', {})).rejects.toThrow(/apiKey|client/i)
-    // @ts-expect-error intentionally missing options
+    // @ts-expect-error intentionally missing the required options argument
     await expect(generatePostBody('brief')).rejects.toThrow(/apiKey|client/i)
   })
 

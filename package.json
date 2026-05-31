@@ -28,7 +28,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint . --ext .ts,.vue",
-    "typecheck": "vue-tsc -p tsconfig.build.json --noEmit"
+    "typecheck": "vue-tsc -p tsconfig.build.json --noEmit",
+    "typecheck:test": "vue-tsc -p tsconfig.test.json --noEmit"
   },
   "peerDependencies": {
     "vue": "^3.4.0"

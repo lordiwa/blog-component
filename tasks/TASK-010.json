@@ -7,7 +7,7 @@
     "Decide the scheduling policy for POST_BY_SLUG_QUERY: currently a future-dated post hidden from the list is still directly reachable by slug. Either add `&& defined(publishedAt) && publishedAt <= now()` to the detail filter for airtight scheduling, or document the asymmetry as intentional (e.g. for preview-by-slug).",
     "Make body/optional fields null-tolerant: detail query projects `body[]` which yields null (not []) when absent; either coalesce to [] in GROQ or widen the `Post.body` type. Confirm the TASK-003 renderer guards either way."
   ],
-  "status": "todo",
+  "status": "done",
   "priority": "medium",
   "labels": ["sanity", "read-path", "follow-up", "tech-debt"],
   "assignee": null,
@@ -21,7 +21,12 @@
       "body": "Created from read-client-reviewer findings on TASK-002. The wordCount->bodyCharCount misnomer (also a review finding) was fixed in TASK-002 itself because it is public API (semver-major if deferred); these three are safe to defer."
     }
   ],
+  "closure": {
+    "at": "2026-05-31T11:25:00.000Z",
+    "by": "orchestrator",
+    "summary": "Read-path hardening done (tests-first). AC1: BlogReadError (+ isBlogReadError, BlogReadOperation) normalizes client.fetch rejections in getPostList/getPostBySlug, preserving original as cause (Error options + own prop, setPrototypeOf for instanceof); a no-match null is NOT wrapped. AC2: POST_BY_SLUG_QUERY now airtight (defined(publishedAt) && publishedAt <= now()); POST_BY_SLUG_PREVIEW_QUERY unfiltered escape hatch; getPostBySlug(client, slug, {allowUnpublished?}) selects (default false=airtight). Both detail queries share DETAIL_PROJECTION. AC3: body coalesced to [] in GROQ so Post.body is always a non-null array; BlogPostPreview already renders [] safely (confirmed). New exports are additive (semver-minor); the one behavioral change (by-slug no longer reaches scheduled posts unless allowUnpublished) recorded in CHANGELOG + README. 117/117 tests, typecheck + typecheck:test + lint + build all green. Independent reviewer PASS, no HIGH/MEDIUM."
+  },
   "created_at": "2026-05-29T21:55:00.000Z",
-  "updated_at": "2026-05-29T21:55:00.000Z",
+  "updated_at": "2026-05-31T11:25:00.000Z",
   "jira_key": null
 }
