@@ -1,0 +1,57 @@
+{
+  "name": "blog-component",
+  "version": "0.0.1",
+  "description": "Reusable Vue 3 + TypeScript component for AI-assisted blog authoring on top of Sanity.",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/blog-component.js",
+  "module": "./dist/blog-component.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/blog-component.js"
+    },
+    "./style.css": "./dist/blog-component.css"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "dev": "vite --config vite.dev.config.ts",
+    "build": "vue-tsc -p tsconfig.build.json --noEmit && vite build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint . --ext .ts,.vue",
+    "typecheck": "vue-tsc -p tsconfig.build.json --noEmit"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
+    "@portabletext/vue": "^1.0.14",
+    "@sanity/client": "^6.21.0",
+    "@sanity/image-url": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "jsdom": "^24.1.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.1",
+    "vite-plugin-dts": "^3.9.1",
+    "vitest": "^1.6.0",
+    "vue": "^3.4.31",
+    "vue-tsc": "^2.0.24"
+  }
+}

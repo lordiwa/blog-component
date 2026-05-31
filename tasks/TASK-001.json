@@ -1,0 +1,38 @@
+{
+  "key": "TASK-001",
+  "title": "Scaffold the Vue 3 + TS component library",
+  "description": "Stand up the package skeleton: Vue 3 + TypeScript with Vite in library build mode, configured so the component can be installed from the personal GitHub repo into other Vue projects. Establish the public entry point, build output (ESM), generated type declarations, and a minimal test + lint setup. No Sanity or AI wiring yet — just a clean, installable, typed shell that exports a placeholder component.",
+  "acceptance_criteria": [
+    "`npm run build` produces an ESM bundle plus a `.d.ts` type declaration via a Vite library-mode config.",
+    "package.json declares correct `exports`, `types`, `peerDependencies` (vue), and `files`, and is installable via a GitHub URL.",
+    "A placeholder component is exported from the package entry and can be imported and mounted in a throwaway consumer.",
+    "Unit test runner and linter run green via the project's default commands."
+  ],
+  "status": "done",
+  "priority": "high",
+  "labels": ["scaffold", "packaging", "vite"],
+  "assignee": null,
+  "depends_on": [],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from the generic seed backlog using blog-implementation-guide.md and the intake decisions (Vue 3 + TS library, Sanity, Claude API, user-uploaded images)."
+    },
+    {
+      "author": "scaffold-dev",
+      "at": "2026-05-29T21:30:00.000Z",
+      "body": "Scaffold implemented (Vite library mode, package.json metadata, BlogPlaceholder.vue, Vitest smoke test, ESLint, examples/consumer.ts). Could NOT run npm install/build/test/lint — sandbox denied npm install. Flagged dts output filename as unverified."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T21:45:00.000Z",
+      "body": "VERIFIED. Fixed one build bug: added @types/node to devDependencies (tsconfig types:[node] failed vue-tsc with TS2688). All AC pass: `npm run build` emits dist/blog-component.js (ESM) + index.d.ts (matches `types`) + .css; `npm test` 3/3 green; `npm run lint` 0 errors (5 cosmetic vue formatting warnings, auto-fixable). dts filename confirmed = dist/index.d.ts. Marking done."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.361Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

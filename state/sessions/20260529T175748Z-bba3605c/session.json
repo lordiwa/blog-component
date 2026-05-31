@@ -1,0 +1,32 @@
+{
+  "schema_version": 2,
+  "session_id": "20260529T175748Z-bba3605c",
+  "lifecycle_state": "active",
+  "updated_at": "2026-05-30T12:15:00.000Z",
+  "active_task": null,
+  "workflow_step": "TASK-011 DONE (library-level, reviewed PASS). Visual playground + Studio for gvc4yjqj working. Next: TASK-008 (consumer guide) / TASK-009 (publish pipeline + CI) / TASK-010 (read-path robustness).",
+  "next_action": "TASK-011 is closed: withPublishDefaults helper + BlogAuthor autoPublish prop shipped, 107/107 tests, build+lint green, independent reviewer PASS (no HIGH), all MEDIUM/LOW addressed. The visual dev playground (npm run dev -> :5173) and the Sanity Studio (studio/ -> :3333, user must `npm install` + `sanity login`) both work against gvc4yjqj/production. Next unit of work (await user pick): TASK-008 (formal consumer integration guide + example), TASK-009 (build/types/publish pipeline + CI), or TASK-010 (read-path robustness follow-ups).",
+  "handoff_summary": "blog-component (reusable Vue 3 + TS library: AI-assisted blog authoring on Sanity). DONE & verified (build + 84/84 tests + lint, each task reviewed fresh): TASK-001..TASK-007. Phase 3 in progress: building a VISUAL dev playground so the user can run <BlogAuthor> in the browser. Target Sanity project = gvc4yjqj, dataset=production (PUBLIC), CORS for http://localhost:5173 added by user. SECURITY: secrets (Sanity write token, Anthropic key) live ONLY in a local .env read by a dev-only Vite server middleware; never shipped to the browser. The user's existing treparole Studio (C:\\Users\\srpar\\WebstormProjects\\treparole\\blog\\schemaTypes) is the schema reference; treparole's live blog is a DIFFERENT project (f1p4pgah). gvc4yjqj is a clean sandbox; datasets are schemaless so the playground can read/write posts without deploying a Studio.",
+  "open_questions": [
+    "Studio deploy to gvc4yjqj is OPTIONAL (datasets are schemaless). Decide later if the user wants a Studio UI for gvc4yjqj content management (copy treparole/blog Studio, point at gvc4yjqj).",
+    "Phase 3 cadence after playground: formal TASK-011 (lib-level + test + reviewer) then TASK-008/009."
+  ],
+  "blockers": [
+    "USER-SIDE (not code): (1) Anthropic account is out of credits -> add credits at console.anthropic.com Plans & Billing. (2) Sanity SANITY_WRITE_TOKEN is Viewer-scoped -> 403 'permission create required'; user must recreate it as Editor/Administrator in sanity.io/manage > gvc4yjqj > API > Tokens. gvc4yjqj starts empty so read-back list is empty until the first post saves.",
+    "Dev playground fixes LANDED (dev/ only, lint+build+95 tests green): image upload now passes Node Buffer to writeClient.assets.upload (was wrapping in undici File -> 500); demo model switched to claude-haiku-4-5-20251001 via ANTHROPIC_MODEL env (cheapest, ~1-1.5c/gen vs ~4c sonnet); fixed @sanity/image-url default-export deprecation in dev/main.ts (named createImageUrlBuilder). Library DEFAULT_AI_MODEL unchanged (sonnet-4-6)."
+  ],
+  "decisions": [
+    "Backend: keep Sanity (not abstracted); each consumer supplies projectId/dataset + adds CORS origins.",
+    "Writes are token-agnostic: component never holds a Sanity token; host injects a SanityWriteAdapter ({save, uploadImage}); default backing = server-side signing endpoint. Admin-scoped token works on ANY plan incl. free; Viewer token => 403 (skill .claude/skills/sanity-writes/).",
+    "AI: text only (images are user-uploaded). Claude via @anthropic-ai/sdk, forced tool emit_post -> PortableText; key-agnostic (host injects Anthropic client or apiKey, server-side). DEFAULT_AI_MODEL='claude-sonnet-4-6'.",
+    "Render reuses blog-implementation-guide.md patterns (@portabletext/vue + @sanity/image-url named createImageUrlBuilder; list-style fix; loud unknown-renderer guard).",
+    "Process: every real-logic task ran developer -> orchestrator verification (build/test/lint) -> fresh-context reviewer; subagents' npm is sandbox-denied so the orchestrator runs all verification.",
+    "TASK-011 RESOLVED (user 2026-05-30): auto-derive slug from title + publishedAt=now on CREATE (publish-now, no draft). Mirrors treparole Studio (slug source=title; publishedAt initialValue=now; both required). On UPDATE keep existing slug/publishedAt.",
+    "Demo target project = gvc4yjqj (clean sandbox), NOT treparole's f1p4pgah. Schema reference only is borrowed from treparole/blog/schemaTypes.",
+    "Demo secrets handling: dev-only Vite server middleware (Node) holds SANITY_WRITE_TOKEN + ANTHROPIC_API_KEY from local .env; browser bundle only ever sees projectId/dataset (VITE_-prefixed)."
+  ],
+  "subagent_results": [
+    "All 7 implementation tasks delivered + 7 review passes + the sanity-writes researcher skill. 4 dev round-trips resolved review findings (vi.mock hoisting, wordCount->bodyCharCount, image-url deprecation/Vue-warn, AI output validation, read-back doc + meta-clear hardening)."
+  ],
+  "pending_human_confirmation": "User to fill local .env (SANITY_WRITE_TOKEN, ANTHROPIC_API_KEY) and run `npm run dev`."
+}

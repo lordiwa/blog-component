@@ -1,0 +1,46 @@
+{
+  "key": "TASK-011",
+  "title": "New-post publishability: slug + publishedAt handling in BlogAuthor",
+  "description": "PRODUCT DECISION surfaced by the TASK-007 review. A post authored from scratch in <BlogAuthor> currently saves successfully but is invisible to BOTH read queries, because POST_LIST_QUERY filters `defined(publishedAt) && publishedAt <= now()` and POST_BY_SLUG_QUERY keys on `slug.current`. The component is schema-loose and does not mint these. For the core use case (authoring NEW posts) to round-trip, BlogAuthor (or the host) must produce a `slug` and a `publishedAt`. This needs a deliberate product decision before implementing — it was intentionally NOT guessed during TASK-007.",
+  "acceptance_criteria": [
+    "Decide whether BlogAuthor auto-derives a URL `slug` from the title (and the uniqueness/collision strategy) or requires the host to supply it.",
+    "Decide how `publishedAt` is set: a publish-now toggle, a draft state, or a scheduled date — and the default for a freshly authored post.",
+    "Implement the chosen behavior so a post created end-to-end in BlogAuthor reads back through getPostList/getPostBySlug (or is intentionally a draft, documented as such).",
+    "Cover the create-new round-trip with a test and document the publishing semantics on the component."
+  ],
+  "status": "done",
+  "priority": "high",
+  "labels": ["authoring", "product-decision", "follow-up"],
+  "assignee": null,
+  "depends_on": ["TASK-007"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T00:25:00.000Z",
+      "body": "From author-reviewer (TASK-007). TASK-007 documents the host's responsibility (slug/publishedAt required for read-back) as an interim measure; THIS ticket decides whether the component should help (auto-slug + publish/draft model) so create-new isn't a half-broken path. Needs the user's product input (publish-now vs draft-by-default, auto-slug vs manual)."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T12:15:00.000Z",
+      "body": "PRODUCT DECISION (user, 2026-05-30): auto-derive slug from title + set publishedAt = now on CREATE (publish-now, no draft). This mirrors the user's existing treparole Studio schema (post.slug options.source='title'; post.publishedAt initialValue: () => new Date().toISOString(); both required). Collision strategy: slugify(title) lowercased, accent-stripped, non-alnum -> '-', collapsed, trimmed, maxLength 96 (matches Studio maxLength). On UPDATE (post._id present) do NOT overwrite an existing slug/publishedAt. First landing in the dev playground save endpoint; library-level implementation (option on createReferenceWriteAdapter or BlogAuthor) + test + reviewer to follow as the formal TASK-011 close."
+    }
+  ],
+  "comments_closure": [
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T23:30:00.000Z",
+      "body": "CLOSED. Library-level implementation: new pure helper `withPublishDefaults(post, {now?})` in src/sanity/write/publish.ts (reuses slugify) — on CREATE (no _id) derives slug from title + sets publishedAt=now; on UPDATE or host-supplied values, never overwrites; empty/whitespace publishedAt treated as absent. Wired into BlogAuthor via new `autoPublish` prop (default true), applied in onSave only. Exported from public API. dev/server-plugin.ts /api/save block removed as redundant. AC #1 slug-collision strategy DOCUMENTED (deterministic slug, not unique; host owns uniqueness — supply own slug or autoPublish=false). Tests: tests/publish.spec.ts (9) + 3 BlogAuthor round-trip cases; 107/107 green; build + lint clean. Independent reviewer verdict: PASS, no HIGH; all MEDIUM/LOW addressed."
+    }
+  ],
+  "acceptance_criteria_met": [
+    "Auto-derive slug from title (slugify) on CREATE; collision strategy = deterministic, host-owned uniqueness, documented.",
+    "publishedAt = now (publish-now) on CREATE; default applied unless host supplies a non-empty value; update path untouched.",
+    "Create-new round-trip reads back via POST_LIST_QUERY (publishedAt<=now) and POST_BY_SLUG_QUERY (slug.current).",
+    "Covered by tests/publish.spec.ts + BlogAuthor TASK-011 cases; publishing semantics documented in BlogAuthor READ-BACK CONTRACT + autoPublish prop."
+  ],
+  "created_at": "2026-05-30T00:25:00.000Z",
+  "updated_at": "2026-05-30T23:30:00.000Z",
+  "jira_key": null
+}

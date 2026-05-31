@@ -1,0 +1,38 @@
+{
+  "key": "TASK-007",
+  "title": "Authoring editor component (compose generate + edit + upload + preview + save)",
+  "description": "Assemble the headline deliverable: a `<BlogAuthor>` component that ties the pieces together. The user enters a brief, triggers Claude generation (TASK-004), edits the resulting PortableText, uploads photos (TASK-006), sees a live preview (TASK-003), and saves to Sanity (TASK-005). Provide a clean props/events API so a host app can drop it in with only Sanity config and the AI/save hooks. Handle loading, error, and dirty/unsaved states.",
+  "acceptance_criteria": [
+    "End to end in an example app: brief -> AI draft -> manual edits -> photo upload -> live preview -> save to Sanity.",
+    "The component exposes a documented props/events API (Sanity config in, save + AI hooks in, save/change events out) with full TypeScript types.",
+    "Loading, error, and unsaved-changes states are handled and visible to the user.",
+    "Saved posts read back correctly through the TASK-002 read path."
+  ],
+  "status": "done",
+  "priority": "high",
+  "labels": ["ui", "integration", "authoring"],
+  "assignee": null,
+  "depends_on": ["TASK-003", "TASK-004", "TASK-006"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed. This is the primary public component of the library."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T18:20:00.000Z",
+      "body": "Per sanity-writes research: <BlogAuthor> receives the `SanityWriteAdapter` ({ save, uploadImage }) as a prop — the component never holds a Sanity write token. AI generation is likewise a host-injected hook. Keep all secrets (Sanity write token, Anthropic key) outside the component; the host wires them via props/adapters."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T00:30:00.000Z",
+      "body": "DONE + VERIFIED + REVIEWED. <BlogAuthor> composes generatePostBody (TASK-004) + BlogPostPreview (TASK-003) + ImageUploader/appendImageToBody (TASK-006) + adapter.save (TASK-005). Flow: brief -> AI draft -> edit title/excerpt -> upload photos (append w/ _key) -> live preview -> save -> emit saved({_id}). Secrets out (adapter + injected generate hook; aiOptions documented server-side). loading/error/dirty handled. Verification: build OK, 84/84 tests (10 author, incl. clear-propagation), lint 0 errors. Reviewer (author-reviewer) PASS, ran the suite itself (83->84 after fix). Fixes applied: read-back contract documented on initialPost, meta-clearing normalized (nonEmpty guard, not dependent on ImageUploader), _brief param dropped. Scope boundary: no WYSIWYG block editor (documented). DEFERRED: new-post slug/publishedAt for read-back -> TASK-011 (needs user product decision)."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.551Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

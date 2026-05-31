@@ -1,0 +1,38 @@
+{
+  "key": "TASK-009",
+  "title": "Build, type-export, and publish pipeline + test harness",
+  "description": "Finalize the library for distribution: confirm the Vite library build emits clean ESM plus generated `.d.ts`, verify the published `exports`/`types`/`peerDependencies`, and set up a GitHub-based release flow (tagged versions installable by URL or git ref) with semver discipline since every exported symbol is public API. Add a test harness covering the read query, the PortableText renderer, the Claude generation path (mocked), and the save round-trip (mocked write layer), runnable in CI.",
+  "acceptance_criteria": [
+    "`npm run build` emits ESM + `.d.ts`; importing the package in a fresh TS project resolves types with no errors.",
+    "A tagged GitHub release is installable into another project via the documented method.",
+    "CI runs unit tests for the read query, renderer, AI generation (mocked), and save round-trip (mocked).",
+    "Public exports are reviewed against the semver-major rule and recorded in a changelog."
+  ],
+  "status": "todo",
+  "priority": "medium",
+  "labels": ["packaging", "ci", "testing", "release"],
+  "assignee": null,
+  "depends_on": ["TASK-007"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed. Library semver discipline per project-context type guidance."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T00:06:00.000Z",
+      "body": "SCOPE ADD (from TASK-004 and TASK-006 reviews): tsconfig.build.json excludes tests/, so `npm run typecheck` (vue-tsc) never type-checks the spec files — vitest only esbuild-transpiles them (no type checking). Add a CI typecheck pass that includes tests/ (e.g. a tsconfig.test.json / separate vue-tsc invocation) so type regressions in the public contract exercised by tests are caught. Fold into the CI pipeline for this ticket."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T00:25:00.000Z",
+      "body": "CONFIRMED REAL (TASK-007 review): typechecking with the full tsconfig.json (which includes tests/) surfaces pre-existing TYPE ERRORS in tests/ai-generate.spec.ts, tests/render-preview.spec.ts, and tests/write-adapter.spec.ts — currently hidden because vitest's esbuild strips types without checking. When this ticket adds the tests/ typecheck pass, those spec type errors must be fixed as part of it. (blog-author.spec.ts is type-clean.)"
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.633Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

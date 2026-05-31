@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-05-29T18:05:00.000Z",
+  "tasks": [
+    {
+      "key": "TASK-001",
+      "title": "Scaffold the Vue 3 + TS component library",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "key": "TASK-002",
+      "title": "Sanity client + content model integration (read path)",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "key": "TASK-003",
+      "title": "PortableText preview renderer",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "key": "TASK-004",
+      "title": "Claude API body generation to PortableText",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "key": "TASK-005",
+      "title": "Secure Sanity write path for saving posts",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "key": "TASK-006",
+      "title": "User photo upload to Sanity image assets",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "key": "TASK-007",
+      "title": "Authoring editor component (compose generate + edit + upload + preview + save)",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "key": "TASK-008",
+      "title": "Consumer integration guide + example app",
+      "status": "todo",
+      "priority": "medium"
+    },
+    {
+      "key": "TASK-009",
+      "title": "Build, type-export, and publish pipeline + test harness",
+      "status": "todo",
+      "priority": "medium"
+    },
+    {
+      "key": "TASK-010",
+      "title": "Read-path robustness follow-ups (errors, scheduling filter, null-tolerance)",
+      "status": "todo",
+      "priority": "medium"
+    },
+    {
+      "key": "TASK-011",
+      "title": "New-post publishability: slug + publishedAt handling in BlogAuthor",
+      "status": "done",
+      "priority": "high"
+    }
+  ]
+}

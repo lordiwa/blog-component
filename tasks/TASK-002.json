@@ -1,0 +1,33 @@
+{
+  "key": "TASK-002",
+  "title": "Sanity client + content model integration (read path)",
+  "description": "Wire the read side of Sanity into the component, reusing the patterns in blog-implementation-guide.md. Provide a configurable Sanity client (projectId/dataset/apiVersion via props or runtime config, `useCdn: true` for reads) and typed GROQ queries — a lightweight listing query and a full detail query that expands authors and resolves `internalLink` references. Port/adapt the `post` and `blockContent` schema types as TypeScript types so the component is type-safe end to end.",
+  "acceptance_criteria": [
+    "The component accepts Sanity config (projectId, dataset, apiVersion) without hardcoding any project's values.",
+    "A typed detail query returns a post with body blocks, expanded author, and resolved internalLink slugs (per the guide's GROQ pattern).",
+    "TypeScript types for `post` and `blockContent` exist and the queries return those types.",
+    "Reads succeed against a real dataset given valid config and a documented CORS origin prerequisite."
+  ],
+  "status": "done",
+  "priority": "high",
+  "labels": ["sanity", "groq", "types"],
+  "assignee": null,
+  "depends_on": ["TASK-001"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed using blog-implementation-guide.md."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T22:35:00.000Z",
+      "body": "DONE + VERIFIED + REVIEWED. createBlogClient + GROQ list/detail (internalLink resolved) + types (Post/BlockContent/...) + getPostList/getPostBySlug, @sanity/client as dependency + externalized. Verification: build OK, 17/17 tests, lint 0 errors, typecheck (vue-tsc) clean. Reviewer (read-client-reviewer): PASS, 0 BLOCKER/0 HIGH. Fixed MEDIUM inline (public API): wordCount->bodyCharCount with coalesce. Deferred LOW/MEDIUM findings tracked in TASK-010 (error normalization, detail-query scheduling filter, null-tolerance)."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.396Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

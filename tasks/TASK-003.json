@@ -1,0 +1,33 @@
+{
+  "key": "TASK-003",
+  "title": "PortableText preview renderer",
+  "description": "Build the read/preview side: a Vue component that renders a Sanity post body with `@portabletext/vue`, porting the `components` map from blog-implementation-guide.md. Cover the standard blocks plus the custom marks and styles the schema uses (lead, pullquote, underline, highlight, code, internal/external links) and the inline `image` type via `@sanity/image-url`. Apply the explicit `list-style` fix so lists keep their markers under a CSS reset. Each custom body type MUST have a renderer (missing renderers fail silently).",
+  "acceptance_criteria": [
+    "A `<BlogPostPreview>` component renders a post body including headings, lists, links, and inline images.",
+    "Custom marks/styles from the schema (lead, pullquote, highlight, internalLink) render correctly; internalLink resolves to an in-app route.",
+    "Ordered and unordered lists display their markers (explicit `list-style` applied in the post scope).",
+    "Adding a body block type without a renderer is caught by a test or documented checklist so it does not fail silently."
+  ],
+  "status": "done",
+  "priority": "high",
+  "labels": ["portabletext", "render", "ui"],
+  "assignee": null,
+  "depends_on": ["TASK-002"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed using blog-implementation-guide.md (sections 5 and 6, problems #4 and #5)."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T23:45:00.000Z",
+      "body": "DONE + VERIFIED + REVIEWED. BlogPostPreview + createPortableComponents (lead/pullquote, underline/highlight/link/internalLink, image via @sanity/image-url named createImageUrlBuilder); list-style fix; loud unknownType/Mark/BlockStyle guard + honest coverage checklists (CUSTOM_MARKS + DELEGATED_DECORATOR_MARKS for strike/code). Verification: build OK, 59/59 tests, lint 0 errors, console clean of the @sanity/image-url deprecation and the [Vue warn] reactive-component warning (both fixed: test uses named export; toRaw+markRaw at the h() call site). Reviewer (render-reviewer) round-trip resolved all HIGH/MEDIUM. @portabletext/vue@1.0.14 matches the coded v1 API."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.426Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

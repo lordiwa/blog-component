@@ -1,0 +1,43 @@
+{
+  "key": "TASK-006",
+  "title": "User photo upload to Sanity image assets",
+  "description": "Let the user attach their own photos to a post. The component provides an upload control that pushes the selected file to Sanity's asset store (via the write layer from TASK-005) and inserts an inline image block carrying the guide's extra fields — `alt`, `caption`, `credit`, and `size` (small/medium/full). No AI image generation; images are user-supplied. Images render through `@sanity/image-url` in the preview (TASK-003).",
+  "acceptance_criteria": [
+    "A user can select a local photo and it is uploaded as a Sanity image asset through the secure write layer.",
+    "The inserted image block includes editable `alt`, `caption`, `credit`, and `size` fields.",
+    "Uploaded images render in the preview at the selected size via `@sanity/image-url`.",
+    "Upload failures (bad token, oversized file) surface a clear error to the user rather than failing silently."
+  ],
+  "status": "done",
+  "priority": "medium",
+  "labels": ["sanity", "images", "upload"],
+  "assignee": null,
+  "depends_on": ["TASK-005"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed. Image fields mirror the guide's inline image schema."
+    },
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:12:00.000Z",
+      "body": "Asset Upload API research is shared with TASK-005's sanity-writes researcher — no separate research pass."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T23:32:00.000Z",
+      "body": "SCOPE NOTE from TASK-005 review: createReferenceWriteAdapter.save() is whole-document replace-by-field; it does NOT incrementally append a block/asset into the body array. TASK-006 owns the incremental insertion path — append an uploaded image into the PortableText body with a per-item `_key` (commit with autoGenerateArrayKeys, or insert('after','body[-1]', ...)). Build on the SanityWriteAdapter.uploadImage() (returns a body-ready SanityImageValue) from TASK-005. Also: add an error-path test for upload rejection / 403 mapping (deferred from TASK-005 review)."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-30T00:05:00.000Z",
+      "body": "DONE + VERIFIED + REVIEWED. useImageUpload(adapter) + <ImageUploader> + appendImageToBody (new array, unique _key via crypto.randomUUID w/ counter fallback) + ImageUploadError (invalid-type/too-large/upload-failed). Token-agnostic (grep-confirmed no @sanity/client/token in src/upload/), pre-validation before adapter, 403 mapped clearly. Block shape cross-checked against TASK-003 renderer. Verification: build OK, 74/74 tests (15 new), lint 0 errors. Reviewer (upload-reviewer): code PASS, 0 BLOCKER/HIGH. Deferred: tests-not-typechecked -> TASK-009; clearing an edited meta field doesn't propagate empty -> TASK-007 authoring UX."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.517Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

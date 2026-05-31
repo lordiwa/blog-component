@@ -1,0 +1,38 @@
+{
+  "key": "TASK-004",
+  "title": "Claude API body generation to PortableText",
+  "description": "Implement the AI authoring core: given a user prompt/brief, call the Claude API (Anthropic SDK) and produce a well-formed Sanity PortableText body (blocks with the styles/marks the schema supports), plus suggested title and excerpt. Use structured output so the result maps cleanly onto the schema types from TASK-002. The API key must NOT be hardcoded; expose the model/key via runtime config and keep the call abstracted so it can run from the host's backend if the host prefers not to expose the key in the browser.",
+  "acceptance_criteria": [
+    "Given a brief, the component returns a valid PortableText body that the TASK-003 renderer displays without unknown-type warnings.",
+    "Generated output includes title and excerpt suggestions mapped to the post type.",
+    "Claude model and API key are supplied via config/props, never hardcoded; prompt-caching is used where it helps.",
+    "A test exercises the generation path against a mocked Claude response and asserts the PortableText shape."
+  ],
+  "status": "done",
+  "priority": "high",
+  "labels": ["ai", "claude-api", "authoring"],
+  "assignee": null,
+  "depends_on": ["TASK-002"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed. AI scope is text only; images are user-uploaded (see TASK-006)."
+    },
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:12:00.000Z",
+      "body": "No dedicated research pass: Anthropic SDK is covered by the installed claude-api skill. Only the output contract (forcing valid PortableText blocks) is new — short spike or straight to design, orchestrator's call."
+    },
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T23:45:00.000Z",
+      "body": "DONE + VERIFIED + REVIEWED. generatePostBody(brief, opts) -> {title, excerpt, body: BlockContent} via forced tool emit_post + tool_choice; deterministic PortableText mapper (cross-checked by reviewer: every emitted style/mark is handled by the TASK-003 renderer or @portabletext/vue defaults, no unknownType); prompt caching (ephemeral) on system prompt; key-agnostic (host injects Anthropic client or apiKey, server-side). DEFAULT_AI_MODEL='claude-sonnet-4-6' (real id in installed SDK). Verification: build OK, 59/59 tests (16 AI, incl. 4 new malformed-output cases), lint 0 errors, typecheck clean vs @anthropic-ai/sdk@0.100.1. Reviewer (ai-gen-reviewer) PASS; MEDIUM fixed inline (validateToolOutput guards title/excerpt/blocks before cast). Deferred LOW: typecheck excludes tests/; AI offers 'code' mark but not 'highlight' (renderable but could align enum to schema) -> revisit in TASK-007."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.453Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

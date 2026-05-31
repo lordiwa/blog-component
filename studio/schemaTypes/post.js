@@ -1,0 +1,185 @@
+import {defineField, defineType} from 'sanity'
+
+export default defineType({
+  name: 'post',
+  title: 'Post',
+  type: 'document',
+  groups: [
+    {name: 'content', title: 'Contenido', default: true},
+    {name: 'meta', title: 'Metadatos'},
+    {name: 'seo', title: 'SEO & redes sociales'},
+    {name: 'editorial', title: 'Editorial'},
+  ],
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Título',
+      type: 'string',
+      group: 'content',
+      validation: (Rule) => Rule.required().min(5).max(140),
+    }),
+    defineField({
+      name: 'subtitle',
+      title: 'Subtítulo / bajada',
+      type: 'string',
+      group: 'content',
+      description: 'Opcional. Texto corto que aparece debajo del título.',
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug (URL)',
+      type: 'slug',
+      group: 'content',
+      options: {source: 'title', maxLength: 96},
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'author',
+      title: 'Autor principal',
+      type: 'reference',
+      group: 'content',
+      to: {type: 'author'},
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'coAuthors',
+      title: 'Co-autores',
+      type: 'array',
+      group: 'content',
+      of: [{type: 'reference', to: {type: 'author'}}],
+      description: 'Opcional. Otros autores que colaboraron.',
+    }),
+    defineField({
+      name: 'mainImage',
+      title: 'Imagen de portada',
+      type: 'image',
+      group: 'content',
+      options: {hotspot: true},
+      fields: [
+        {name: 'alt', type: 'string', title: 'Texto alternativo'},
+        {name: 'credit', type: 'string', title: 'Crédito / fuente'},
+      ],
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Categorías',
+      type: 'array',
+      group: 'meta',
+      of: [{type: 'reference', to: {type: 'category'}}],
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      group: 'meta',
+      of: [{type: 'string'}],
+      options: {layout: 'tags'},
+      description: 'Etiquetas libres, separadas por enter.',
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'Fecha de publicación',
+      type: 'datetime',
+      group: 'meta',
+      initialValue: () => new Date().toISOString(),
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'updatedAt',
+      title: 'Última actualización',
+      type: 'datetime',
+      group: 'meta',
+      description: 'Opcional. Útil para artículos editados después de publicar.',
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Destacado',
+      type: 'boolean',
+      group: 'meta',
+      initialValue: false,
+      description: 'Los posts destacados aparecen primero en el listado.',
+    }),
+    defineField({
+      name: 'excerpt',
+      title: 'Resumen / extracto',
+      type: 'text',
+      group: 'content',
+      rows: 3,
+      description: 'Resumen corto que aparece en la card del listado y en redes sociales.',
+      validation: (Rule) => Rule.max(280),
+    }),
+    defineField({
+      name: 'body',
+      title: 'Cuerpo del artículo',
+      type: 'blockContent',
+      group: 'content',
+    }),
+
+    defineField({
+      name: 'seoTitle',
+      title: 'Meta title (SEO)',
+      type: 'string',
+      group: 'seo',
+      description: 'Opcional. Si lo dejas vacío se usa el título normal. Máx 60 caracteres recomendado.',
+      validation: (Rule) => Rule.max(70),
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'Meta description (SEO)',
+      type: 'text',
+      group: 'seo',
+      rows: 3,
+      description: 'Opcional. Si lo dejas vacío se usa el excerpt. Máx 160 caracteres recomendado.',
+      validation: (Rule) => Rule.max(170),
+    }),
+    defineField({
+      name: 'openGraphImage',
+      title: 'Imagen para redes sociales (Open Graph)',
+      type: 'image',
+      group: 'seo',
+      description: 'Opcional. La imagen que aparece al compartir en Facebook/Twitter/WhatsApp. Si la dejas vacía se usa la portada. Recomendado 1200×630px.',
+      options: {hotspot: true},
+    }),
+
+    defineField({
+      name: 'sources',
+      title: 'Fuentes / referencias',
+      type: 'array',
+      group: 'editorial',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {name: 'label', type: 'string', title: 'Descripción'},
+            {name: 'url', type: 'url', title: 'URL'},
+          ],
+          preview: {select: {title: 'label', subtitle: 'url'}},
+        },
+      ],
+    }),
+    defineField({
+      name: 'internalNotes',
+      title: 'Notas internas',
+      type: 'text',
+      group: 'editorial',
+      rows: 4,
+      description: 'Notas para el equipo editorial. NO se publican en el sitio.',
+    }),
+  ],
+
+  preview: {
+    select: {
+      title: 'title',
+      author: 'author.name',
+      media: 'mainImage',
+      featured: 'featured',
+    },
+    prepare({title, author, media, featured}) {
+      return {
+        title: `${featured ? '⭐ ' : ''}${title}`,
+        subtitle: author && `por ${author}`,
+        media,
+      }
+    },
+  },
+})

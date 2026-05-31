@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+coverage/
+
+# Local dev playground secrets (TASK-008). Never commit real tokens/keys.
+# `.env.example` is the committed template; `.env` holds the real values.
+.env
+.env.*
+!.env.example

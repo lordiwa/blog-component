@@ -1,0 +1,28 @@
+{
+  "key": "TASK-008",
+  "title": "Consumer integration guide + example app",
+  "description": "Make the component genuinely reusable across the user's other projects. Write integration docs covering: installing from the GitHub repo, supplying Sanity `projectId`/`dataset`/`apiVersion`, adding the host origin(s) to Sanity CORS Origins (the silent prod-blocker from guide section 11), wiring the AI hook and the write/signing layer, and the required Sanity schema types the consumer's dataset must have. Ship a minimal example consumer app that mounts both `<BlogAuthor>` and `<BlogPostPreview>`.",
+  "acceptance_criteria": [
+    "A README/integration doc walks through install-from-GitHub plus all required config, including the CORS Origins step.",
+    "Required Sanity schema (post + blockContent + image fields) is documented or exported for consumers to add to their Studio.",
+    "An example app in the repo installs the package and renders both authoring and preview against a real or stubbed dataset.",
+    "Docs state the write-token/permission requirement and link the secure write-path options from TASK-005."
+  ],
+  "status": "todo",
+  "priority": "medium",
+  "labels": ["docs", "integration", "example"],
+  "assignee": null,
+  "depends_on": ["TASK-002"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "init-project",
+      "at": "2026-05-29T18:05:00.000Z",
+      "body": "Reshaped from generic seed. CORS step is the most-forgotten prod blocker per the guide."
+    }
+  ],
+  "created_at": "2026-05-29T17:57:48.588Z",
+  "updated_at": "2026-05-29T18:05:00.000Z",
+  "jira_key": null
+}

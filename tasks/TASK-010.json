@@ -1,0 +1,27 @@
+{
+  "key": "TASK-010",
+  "title": "Read-path robustness follow-ups (errors, scheduling filter, null-tolerance)",
+  "description": "Deferred MEDIUM/LOW findings from the TASK-002 code review. None block the read path working, but each is a deliberate decision worth making before the read API is widely consumed. Bundle them into one hardening pass.",
+  "acceptance_criteria": [
+    "Decide and implement consumer-facing error handling for getPostList/getPostBySlug: either normalize @sanity/client rejections into a typed error shape, or explicitly document that raw SDK errors surface (project-context.md says consumer-facing error shapes are part of the contract).",
+    "Decide the scheduling policy for POST_BY_SLUG_QUERY: currently a future-dated post hidden from the list is still directly reachable by slug. Either add `&& defined(publishedAt) && publishedAt <= now()` to the detail filter for airtight scheduling, or document the asymmetry as intentional (e.g. for preview-by-slug).",
+    "Make body/optional fields null-tolerant: detail query projects `body[]` which yields null (not []) when absent; either coalesce to [] in GROQ or widen the `Post.body` type. Confirm the TASK-003 renderer guards either way."
+  ],
+  "status": "todo",
+  "priority": "medium",
+  "labels": ["sanity", "read-path", "follow-up", "tech-debt"],
+  "assignee": null,
+  "depends_on": ["TASK-002"],
+  "linked_commits": [],
+  "linked_prs": [],
+  "comments": [
+    {
+      "author": "orchestrator",
+      "at": "2026-05-29T21:55:00.000Z",
+      "body": "Created from read-client-reviewer findings on TASK-002. The wordCount->bodyCharCount misnomer (also a review finding) was fixed in TASK-002 itself because it is public API (semver-major if deferred); these three are safe to defer."
+    }
+  ],
+  "created_at": "2026-05-29T21:55:00.000Z",
+  "updated_at": "2026-05-29T21:55:00.000Z",
+  "jira_key": null
+}
